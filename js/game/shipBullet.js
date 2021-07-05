@@ -2,6 +2,8 @@ class ShipBullet extends Actor {
 
     speed = 18;
     size = new Vector2(8, 8);
+    
+    isPlatform = false;
 
     constructor(pos) {
         super();
@@ -11,7 +13,7 @@ class ShipBullet extends Actor {
     }
     
     update = (game, activity) => {
-        if (Math.abs(activity.player.pos.x - this.pos.x) > game.width) this.isDone = true;
+        if (Math.abs(activity.player.ship.pos.x - this.pos.x) > game.width) this.isDone = true;
         if (this.isDone) {
             return;
         }

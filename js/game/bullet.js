@@ -2,6 +2,8 @@ class Bullet extends Actor {
 
     speed = 4;
     size = new Vector2(4, 4);
+    
+    isPlatform = false;
 
     constructor(pos, n) {
         super();
@@ -11,11 +13,11 @@ class Bullet extends Actor {
     }
     
     update = (game, activity) => {
-        if (Math.abs(activity.p1.pos.x - this.pos.x) > game.width) this.isDone = true;
+        if (Math.abs(activity.player.character.pos.x - this.pos.x) > game.width) this.isDone = true;
         if (this.isDone) {
             return;
         }
-        this.isDone = CollisionBox2.intersects(this, activity.p2) || this.pos.y + this.size.y > 128;
+        this.isDone = this.pos.y + this.size.y > 128;
         this.action = this.isDone ? 'done' : 'idle';
         if (this.isDone) this.vel = new Vector2(0, 0);
 
@@ -25,7 +27,9 @@ class Bullet extends Actor {
         this.frameCount++;
     }
     
-    display = (cx, assets) => {
+    display = (game, activity) => {
+        const cx = game.cx;
+        const assets = game.assets;
         cx.drawImage(assets.images['bullet'], this.isDone ? 8 : 0, 0, 8, 8, this.pos.x - this.size.x / 2, this.pos.y - this.size.y / 2, 8, 8);
         if (this.frameCount === 1) {
             cx.drawImage(assets.images['bullet'], 16, 0, 8, 8, this.pos.x - this.size.x / 2, this.pos.y - this.size.y / 2, 8, 8);

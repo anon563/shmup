@@ -10,6 +10,7 @@ class Assets {
         { id: 'bullet_2', src: 'img/bullet_2.png' },
         { id: 'gun', src: 'img/gun.png' },
         { id: 'ship', src: 'img/ship.png' },
+        { id: 'ship_2', src: 'img/ship_2.png' },
         { id: 'flare_idle', src: 'img/flare_idle.png' },
         { id: 'flare_walk', src: 'img/flare_walk.png' },
         { id: 'flare_jump', src: 'img/flare_jump.png' },

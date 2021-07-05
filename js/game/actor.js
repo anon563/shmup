@@ -33,11 +33,13 @@ class Actor {
 
     displayCollisionBox = game => {
         const cx = game.cx;
-        cx.lineWidth = 2 / game.zoom;
         const pos = this.pos.round();
         cx.save();
-        cx.strokeStyle = "#00f";
-        cx.strokeRect(pos.x, pos.y, this.size.x, this.size.y);
+        cx.fillStyle = "#00f";
+        cx.fillRect(pos.x, pos.y, this.size.x, 1);
+        cx.fillRect(pos.x, pos.y, 1, this.size.y);
+        cx.fillRect(pos.x + this.size.x - 1, pos.y, 1, this.size.y);
+        cx.fillRect(pos.x, pos.y + this.size.y - 1, this.size.x, 1);
         cx.fillStyle = "#00f4";
         cx.fillRect(pos.x, pos.y, this.size.x, this.size.y);
         cx.restore();
