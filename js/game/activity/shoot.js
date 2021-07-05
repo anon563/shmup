@@ -127,6 +127,7 @@ class Shoot extends Activity {
         cx.drawImage(game.assets.images.bg,
             0, backgroundHeightBuffer + bgoffset, game.width, 48 - bgoffset,
             -game.width / 2 - Math.round(this.frameCount * 7) % game.width, backgroundHeightBuffer + bgoffset, game.width, 48 - bgoffset);
+        cx.globalAlpha = 1;
 
         // dust trails
         for (let i = 0; i < game.height; i++) {
@@ -136,5 +137,6 @@ class Shoot extends Activity {
         }
 
         cx.restore();
+        cx.fillText("WASD: move, J: shoot, K: jump (marine), L: switch", 1, 8);
     }
 }
