@@ -1,28 +1,53 @@
 class Assets {
     images = new Object;
-    imageDataList = [
-        { id: 'bg', src: 'img/bg.png' },
-        { id: 'item', src: 'img/item.png' },
-        { id: 'bullet', src: 'img/bullet.png' },
-        { id: 'fire', src: 'img/fire.png' },
-        { id: 'smoke', src: 'img/smoke.png' },
-        { id: 'water', src: 'img/water.png' },
-        { id: 'bullet_2', src: 'img/bullet_2.png' },
-        { id: 'gun', src: 'img/gun.png' },
-        { id: 'ship', src: 'img/ship.png' },
-        { id: 'ship_2', src: 'img/ship_2.png' },
-        { id: 'flare_idle', src: 'img/flare_idle.png' },
-        { id: 'flare_walk', src: 'img/flare_walk.png' },
-        { id: 'flare_jump', src: 'img/flare_jump.png' },
-        { id: 'marine_idle', src: 'img/marine_idle.png' },
-        { id: 'marine_walk', src: 'img/marine_walk.png' },
-        { id: 'marine_jump', src: 'img/marine_jump.png' }
+    imageList = [
+        // Opening
+        'opening',
+
+        // Level
+        'background_01',
+        
+        'scrap_1',
+        'scrap_2',
+        'scrap_3',
+        'scrap_4',
+        'scrap_5',
+        
+        'ray_1',
+        'ray_2',
+        'ray_3',
+        'ray_4',
+
+        'circle_4',
+        'circle_8',
+        'item',
+        'fire',
+        'smoke',
+        'water',
+        'bullet_2',
+        'bullet_3',
+        'bullet_4',
+        'gun',
+        'ship',
+        'ship_2',
+        'ship_3',
+        // 'flare_idle',
+        // 'flare_walk',
+        // 'flare_jump',
+
+        'aqua_idle',
+        'aqua_walk',
+        'aqua_jump',
+
+        'marine_idle',
+        'marine_walk',
+        'marine_jump'
     ];
     
     constructor() {
-        this.imageDataList.forEach(imageData => {
-            this.images[imageData.id] = new Image;
-            this.images[imageData.id].src = imageData.src;
+        this.imageList.forEach(id => {
+            this.images[id] = new Image;
+            this.images[id].src = `img/${id}.png`;
         });
     }
 

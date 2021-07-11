@@ -6,23 +6,17 @@ class Actor {
         this.size = size;
     }
 
-    update = game => {
-        this.frameCount++;
-    }
+    update = game => this.frameCount++;
 
     display = (cx, assets) => {}
 
     displayAnimation = (cx, assets, animation, asset) => {
-        const pos = this.pos.round();
         cx.save();
-        cx.translate(pos.x, pos.y);
+        cx.translate(this.pos.x, this.pos.y);
         if (!this.dir) {
             cx.translate(this.size.x / 2, 0);
             cx.scale(-1, 1);
             cx.translate(-this.size.x / 2, 0);
-        }
-        if (this.item) {
-            cx.drawImage(assets.images['gun'], 0, 0, 8, 8, this.size.x - 1, 5, 8, 8);
         }
         cx.drawImage(asset,
             Math.floor(this.frameCount * animation.speed) % animation.frames * animation.size.x, 0, animation.size.x, animation.size.y,

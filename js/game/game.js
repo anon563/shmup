@@ -2,58 +2,51 @@ class Game {
     width = 256;
     height = 224;
     
+    // Canvas used to draw
     dataCanvas = document.createElement('canvas');
     cx = this.dataCanvas.getContext('2d');
     
+    // Canvas used to display
     displayCanvas = document.createElement('canvas');
     displayCx = this.displayCanvas.getContext('2d');
 
-
+    // Force 60fps
     fpsInterval = 1000 / 60;
-    lastTimestamp = null;
+    lastTimestamp = window.performance.now();
     step = null;
 
     constructor(assets) {
         // Display
         this.assets = assets;
-
         this.dataCanvas.width = this.width;
         this.dataCanvas.height = this.height;
         this.resize();
         window.addEventListener('resize', this.resize);
         document.body.appendChild(this.displayCanvas);
+        this.cx.imageSmoothingEnabled = false;
 
         // Keys
         this.keys = new KeyboardListener().keys;
 
-        this.activity = new Shoot(this.keys);
+        // Activity
+        this.activity = new Level(this.keys, this.width, this.height);
     }
 
     loop = timestamp => {
-        if (!this.lastTimestamp) this.lastTimestamp = window.performance.now();
         this.step = timestamp - this.lastTimestamp;
         if (this.step > this.fpsInterval) {
             this.lastTimestamp = timestamp - (this.step % this.fpsInterval);
 
-            // Update activity
+            // Update
             this.activity.update(this);
-            this.activity.frameCount++;
 
-            const imgData = this.cx.getImageData(0, 0, this.width, this.height);
-
-            let tmpCanvas = document.createElement("canvas");
-            tmpCanvas.width = this.width;
-            tmpCanvas.height = this.height;
-            let tmpCx = tmpCanvas.getContext("2d");
-            tmpCx.imageSmoothingEnabled = false;
-            tmpCx.putImageData(imgData, 0, 0);
-
-            this.displayCx.drawImage(tmpCanvas, 0, 0);
+            // Display
+            this.displayCx.drawImage(this.dataCanvas, 0, 0);
         }
         requestAnimationFrame(this.loop);
     }
 
-    // Resize canvas
+    // Resize display canvas
     resize = () => {
         this.zoom = Math.max(1, Math.min(Math.floor(innerWidth / this.width), Math.floor(innerHeight / this.height)));
         this.displayCanvas.width = this.width * this.zoom;

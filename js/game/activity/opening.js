@@ -11,6 +11,7 @@ class Opening extends Activity {
             cx.restore();
         }
         
-        if (this.frameCount === this.frameDuration) game.activity = new Stage(game.keys);
+        if (this.frameCount === this.frameDuration) game.activity = new Level(game.keys);
+        this.frameCount++;
     }
 }

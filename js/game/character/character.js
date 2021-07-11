@@ -15,24 +15,47 @@ class Character extends Actor {
     chargedShot = 0;
 
     item = null;
+    
+    maxHealth = 50;
+    health = this.maxHealth;
 
     constructor(data, pos) {
-        super();
+        super(pos);
 
         this.name = data.name;
         this.actions = data.actions;
 
         this.dir = true;
         this.size = new Vector2(this.actions['idle'].size.x, this.actions['idle'].size.y);
-        this.pos = pos;
+        this.lastPos = pos;
+    }
+
+    hit = (game, activity, actor) => {
+        this.gotHit = true;
+        this.health--;
+        if (!this.health) {
+            this.isDone = true;
+            for (let i = 0; i < 2; i++) {
+                activity.particles.push({
+                    pos: actor.pos.plus(this.size.times(.5)),
+                    size: new Vector2(128, 128),
+                    vel: new Vector2(0, 0),
+                    life: 1,
+                    step: 0.25,
+                    asset: `ray_${Math.ceil(Math.random() * 4)}`
+                });
+            }
+        }
     }
     
-    update = (game, activity, keys) => {
-
+    update = (game, activity) => {
+        const keys = activity.player.mode === 'character' && this === activity.player.character ? activity.keys : {};
         // Action
         this.isWalking = this.platform && keys.left !== keys.right;
         this.action = !this.platform ? "jump" : (this.isWalking ? "walk" : "idle");
 
+        this.gotHit = false;
+        
         // Velocity
         this.vel = this.vel.mult(this.velLoss);
         this.vel.x += (this.platform ? this.walkSpeed : this.aerialSpeed) * (keys.left === keys.right ? 0 : keys.left ? -1 : 1)
@@ -41,7 +64,7 @@ class Character extends Actor {
 
         // Jump
         if (this.platform && this.canJump && keys.jump) {
-            this.vel.y = -2;
+            this.vel.y = -2.5;
             this.canJump = false;
             this.platform = null;
         }
@@ -51,11 +74,12 @@ class Character extends Actor {
         this.dir = keys.left === keys.right ? this.dir : keys.right;
 
         // Position
+        this.lastPos = this.pos.value();
         const newPos = this.pos.plus(this.vel);
 
         // Platform
         if (!this.platform) {
-            this.platform = [activity.player.ship, ...activity.actors].find(a => a.isPlatform && a.pos.y <= newPos.y + this.size.y && a.lastPos.y >= this.pos.y + this.size.y && CollisionBox2.intersects(a, { pos:newPos, size:this.size }));
+            this.platform = activity.actors.find(a => a.isPlatform && !a.isDone && a.pos.y <= newPos.y + this.size.y && a.lastPos.y >= this.pos.y + this.size.y && CollisionBox2.intersects(a, { pos:newPos, size:this.size }));
             if (this.platform) {
                 this.pos.y = this.platform.pos.y - this.size.y;
                 this.vel.y = 0;
@@ -66,8 +90,13 @@ class Character extends Actor {
             else this.pos = this.pos.plus(this.vel);
         }
 
+        if (this.pos.y > game.height) this.pos.y = 0;
+        if (this.pos.x < -game.width / 2) this.pos.x = -game.width / 2;
+        if (this.pos.x + this.size.x > game.width / 2) this.pos.x = game.width / 2 - this.size.x;
+
         // Gun
-        if (keys.attack && this.canShoot) {
+        // if (keys.attack && this.canShoot) {
+        if (keys.attack && this.frameCount % 2) {
             this.canShoot = false;
             
             let angle = 0;
@@ -79,18 +108,10 @@ class Character extends Actor {
             }
             
             const pos = this.pos.plus(this.size.times(0.5)).plus(this.size.mult(new Vector2((this.dir ? 0.6 : -0.8) * (keys.down || keys.up ? 0.7 : 1), keys.down ? (0.1) : (keys.up ? (-0.4) : (-0.15)))));
-            const bullet = new Bullet(pos, new Vector2(Math.cos(angle), Math.sin(angle)));
-            activity.actors.push(bullet);
+            activity.actors.push(new Bullet(pos, this, 8, 8, angle));
         }
         if (!keys.attack && !this.canShoot) this.canShoot = true;
 
-        // item
-        // activity.items.forEach(item => {
-        //     if (CollisionBox2.intersects(this, item)) {
-        //         this.item = 'gun';
-        //         item.isDone = true;
-        //     }
-        // });
         this.displayAnimation(game.cx, game.assets, this.actions[this.action].animation, game.assets.images[`${this.name}_${this.action}`]);
 
         this.frameCount++;

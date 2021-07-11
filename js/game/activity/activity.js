@@ -1,4 +1,4 @@
 class Activity {
     frameCount = 0;
-    update = game => {}
+    update = game => this.frameCount++;
 }
