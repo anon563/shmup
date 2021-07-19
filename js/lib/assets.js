@@ -17,6 +17,10 @@ class Assets {
         'ray_2',
         'ray_3',
         'ray_4',
+        
+        'explosion',
+
+        'in',
 
         'circle_4',
         'circle_8',
@@ -28,7 +32,9 @@ class Assets {
         'bullet_3',
         'bullet_4',
         'gun',
+
         'ship',
+        'ship_open',
         'ship_2',
         'ship_3',
         // 'flare_idle',
